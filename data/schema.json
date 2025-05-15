@@ -1,0 +1,20 @@
+{
+  "employees": [
+    [
+      "id",
+      "integer"
+    ],
+    [
+      "salary",
+      "numeric"
+    ],
+    [
+      "name",
+      "text"
+    ],
+    [
+      "department",
+      "text"
+    ]
+  ]
+}
