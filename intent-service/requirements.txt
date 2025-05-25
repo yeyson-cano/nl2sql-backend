@@ -1,3 +1,4 @@
 fastapi
 uvicorn[standard]
 pydantic
+spacy # Requiere: python -m spacy download es_core_news_sm
