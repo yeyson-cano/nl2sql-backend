@@ -1,0 +1,36 @@
+# Ignora entornos virtuales
+.venv/
+env/
+venv/
+
+# Ignora sistema de control de versiones
+.git/
+.gitignore
+
+# Archivos de entorno y configuración local
+.env
+*.env
+
+# Archivos de cache y compilados
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Archivos de test
+.pytest_cache/
+tests/
+
+# Archivos temporales de editor
+*.swp
+*.bak
+*.tmp
+*~
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
