@@ -1,0 +1,15 @@
+services:
+  intent-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    restart: on-failure
+    # Opcional: si quieres montar el código en modo desarrollo (que refleje cambios sin rebuild),
+    # descomenta las siguientes líneas:
+    # volumes:
+    #   - ./:/app
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

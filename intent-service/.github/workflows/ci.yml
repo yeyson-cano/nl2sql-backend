@@ -1,0 +1,32 @@
+name: CI - Intent Service
+
+on:
+  push:
+    paths:
+      - 'intent-service/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'intent-service/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: intent-service
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Build Docker image
+      run: docker build -t intent-service-test .
+
+    - name: Run container and execute tests
+      run: docker run --rm intent-service-test bash run-tests.sh
