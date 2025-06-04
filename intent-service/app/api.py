@@ -6,8 +6,7 @@ from .openai_client import extract_intent_with_gpt4
 
 router = APIRouter()
 
-# Descripción textual del esquema de la base de datos.
-# En un caso real, podrías cargar esto dinámicamente.
+# Esquema simulado. En una app real esto se puede extraer dinámicamente desde la BD.
 SCHEMA_DESCRIPTION = """
 clientes(id, nombre, edad),
 transacciones(id, cliente_id, monto, fecha)
@@ -17,19 +16,24 @@ transacciones(id, cliente_id, monto, fecha)
 def extract_intent(req: IntentRequest):
     """
     Endpoint para analizar la intención de la consulta en lenguaje natural.
-    - Envía a GPT-4 un prompt que incluye el texto del usuario y el esquema completo de la BD.
-    - Devuelve directamente un JSON con 'entities', 'predicates', 'aggregations' y 'groupings'.
+    - Llama a GPT-4 con el texto del usuario y un esquema de ejemplo.
+    - Filtra y transforma la salida para ajustarse al modelo de respuesta.
     """
     try:
         intent_dict = extract_intent_with_gpt4(req.text, SCHEMA_DESCRIPTION)
     except Exception as e:
-        # Si GPT-4 falla o la respuesta no es JSON válido, devolvemos un error 500
         raise HTTPException(status_code=500, detail=str(e))
 
-    # Extraemos cada lista del JSON (si alguna clave falta, devolvemos lista vacía)
-    entidades     = intent_dict.get("entidades", [])
-    predicados    = intent_dict.get("predicados", [])
-    agregaciones  = intent_dict.get("agregaciones", [])
+    # Extraemos y filtramos solo entidades de tipo TABLE o COLUMN
+    raw_entidades = intent_dict.get("entidades", [])
+    entidades = [
+        e["name"] for e in raw_entidades
+        if isinstance(e, dict) and e.get("type") in ("TABLE", "COLUMN")
+    ]
+
+    # Se asume que los demás campos ya vienen con la forma esperada
+    predicados = intent_dict.get("predicados", [])
+    agregaciones = intent_dict.get("agregaciones", [])
     agrupamientos = intent_dict.get("agrupamientos", [])
 
     return IntentResponse(
